@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="GBK">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>心经</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(135deg, #f8f4e9 0%, #efe7d5 100%);
+            color: #5a3921;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 佛教元素背景 */
+        .buddha-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(211, 189, 156, 0.08) 0.5px, transparent 0.5px),
+                radial-gradient(circle at 90% 80%, rgba(211, 189, 156, 0.08) 0.5px, transparent 0.5px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+        
+        .lotus {
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 180px;
+            height: 180px;
+            background-image: 
+                radial-gradient(circle at 70% 70%, rgba(180, 150, 100, 0.1) 8px, transparent 8px),
+                radial-gradient(circle at 30% 30%, rgba(180, 150, 100, 0.1) 6px, transparent 6px);
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 253, 245, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 6px 25px rgba(90, 57, 33, 0.12);
+            border: 2px solid #d9c7a1;
+            padding: 22px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "卍";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 130px;
+            color: rgba(211, 189, 156, 0.1);
+            z-index: 0;
+            font-weight: 700;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title h1 {
+            font-size: 24px;
+            color: #8d5a2d;
+            letter-spacing: 3px;
+            margin-bottom: 6px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.08);
+            font-weight: 700;
+        }
+        
+        .title .divider {
+            height: 2.5px;
+            background: linear-gradient(to right, transparent, #c9a87a, transparent);
+            margin: 10px auto;
+            width: 80%;
+            border-radius: 2px;
+        }
+        
+        .prayer-content {
+            font-size: 16px;
+            line-height: 1.85;
+            text-align: center;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+            max-height: 55vh;
+            overflow-y: auto;
+            padding: 10px 6px;
+            font-weight: 600;
+        }
+        
+        .prayer-content p {
+            margin-bottom: 14px;
+            text-indent: 2em;
+            text-align: left;
+        }
+        
+        .prayer-content .verse {
+            font-weight: 700;
+            font-size: 17px;
+            color: #7a5229;
+            text-align: center;
+            margin: 16px 0;
+            text-indent: 0;
+            line-height: 1.95;
+            letter-spacing: 0.5px;
+        }
+        
+        .counter-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            margin-top: 12px;
+        }
+        
+        .counter-display {
+            font-size: 24px;
+            margin-bottom: 18px;
+            background: linear-gradient(to bottom, #e6d7b7, #d9c9a8);
+            padding: 10px 30px;
+            border-radius: 32px;
+            border: 2px solid #c9a87a;
+            color: #5a3921;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06) inset, 0 3px 8px rgba(255,255,255,0.5);
+            font-weight: 600;
+        }
+        
+        .counter-display span {
+            font-weight: 700;
+            color: #8d5a2d;
+            margin: 0 5px;
+            font-size: 26px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .btn {
+            padding: 13px 22px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Noto Serif SC', serif;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 150px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-count {
+            background: linear-gradient(to bottom, #a77c47, #7d532a);
+            color: #fff8e6;
+            border: 2px solid #8d6538;
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to bottom, #f0e5d0, #d4c0a1);
+            color: #5a3921;
+            border: 2px solid #c9a87a;
+        }
+        
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        }
+        
+        .btn::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: all 0.6s;
+            pointer-events: none;
+        }
+        
+        .btn:active::after {
+            transform: translateY(100%) rotate(30deg);
+        }
+        
+        .footer {
+            margin-top: 18px;
+            font-size: 13px;
+            color: #9e8a6f;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+        }
+        
+        /* 滚动条样式 */
+        .prayer-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .prayer-content::-webkit-scrollbar-track {
+            background: rgba(233, 224, 201, 0.5);
+            border-radius: 3px;
+        }
+        
+        .prayer-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #c9a87a, #b08e5c);
+            border-radius: 3px;
+            border: 1px solid #a77c47;
+        }
+        
+        /* 响应式调整 */
+        @media (max-height: 700px) {
+            .prayer-content {
+                font-size: 15px;
+                max-height: 50vh;
+            }
+            
+            .prayer-content .verse {
+                font-size: 16px;
+                margin: 14px 0;
+            }
+            
+            .counter-display {
+                font-size: 22px;
+                padding: 9px 25px;
+                margin-bottom: 16px;
+            }
+            
+            .counter-display span {
+                font-size: 24px;
+            }
+            
+            .btn {
+                padding: 11px 18px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .title h1 {
+                font-size: 22px;
+            }
+            
+            .prayer-content {
+                font-size: 15px;
+                padding: 8px 4px;
+            }
+            
+            .prayer-content .verse {
+                font-size: 16px;
+            }
+            
+            .counter-display {
+                font-size: 22px;
+            }
+            
+            .counter-display span {
+                font-size: 24px;
+            }
+            
+            .buttons {
+                gap: 12px;
+            }
+            
+            .btn {
+                padding: 11px 14px;
+                font-size: 15px;
+                max-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="buddha-pattern"></div>
+    <div class="lotus"></div>
+    
+    <div class="container">
+        <div class="title">
+            <h1>心经</h1>
+            <div class="divider"></div>
+        </div>
+        
+        <div class="prayer-content">
+         
+            <p>
+		观自在菩萨，行深般若波罗蜜多时，照见五蕴皆空，度一切苦厄。
+ 		</p >
+ 		<p>
+		舍利子，色不异空，空不异色，色即是空，空即是色，受想行识亦复如是。
+		</p >
+ 		<p>
+		舍利子，是诸法空相，不生不灭，不垢不净，不增不减。
+		</p >
+ 		<p>
+		是故空中无色，无受想行识，无眼耳鼻舌身意，无色声香味触法，无眼界乃至无意识界，无无明亦无无明尽，乃至无老死，亦无老死尽，无苦集灭道，无智亦无得，以无所得故。
+		</p >
+ 		<p>
+		菩提萨埵，依般若波罗蜜多故，心无挂碍；无挂碍故，无有恐怖，远离颠倒梦想，究竟涅槃。
+		</p >
+ 		<p>
+		三世诸佛，依般若波罗蜜多故，得阿耨多罗三藐三菩提。
+		</p >
+ 		<p>
+		故知般若波罗蜜多，是大神咒，是大明咒，是无上咒，是无等等咒，能除一切苦，真实不虚。
+		</p >
+ 		<p>
+		故说般若波罗蜜多咒，即说咒曰：揭谛揭谛，波罗揭谛，波罗僧揭谛，菩提萨婆诃。        
+		 </p >
+              
+ 	</div>
+        
+        <div class="counter-section">
+            <div class="counter-display">已念诵: <span id="count">0</span> 遍</div>
+            <div class="buttons">
+                <button class="btn btn-count" id="countBtn">念诵一遍</button>
+                <button class="btn btn-reset" id="resetBtn">重置计数</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            功德无量 · 福慧双增 · 南无阿弥陀佛
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const countDisplay = document.getElementById('count');
+            const countBtn = document.getElementById('countBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            // 从本地存储获取计数或初始化为0
+            let count = parseInt(localStorage.getItem('prayerCount')) || 0;
+            countDisplay.textContent = count;
+            
+            // 增加计数
+            countBtn.addEventListener('click', function() {
+                count++;
+                countDisplay.textContent = count;
+                localStorage.setItem('prayerCount', count);
+                
+                // 添加视觉反馈
+                const counterSpan = countDisplay.querySelector('span');
+                counterSpan.style.transform = 'scale(1.15)';
+                counterSpan.style.color = '#a77c47';
+                setTimeout(() => {
+                    counterSpan.style.transform = 'scale(1)';
+                    counterSpan.style.color = '#8d5a2d';
+                }, 300);
+            });
+            
+            // 重置计数
+            resetBtn.addEventListener('click', function() {
+                if (confirm('确定要重置念诵计数吗？')) {
+                    count = 0;
+                    countDisplay.textContent = count;
+                    localStorage.setItem('prayerCount', count);
+                    
+                    // 添加视觉反馈
+                    const counterSpan = countDisplay.querySelector('span');
+                    counterSpan.style.transform = 'scale(0.85)';
+                    counterSpan.style.color = '#b08e5c';
+                    setTimeout(() => {
+                        counterSpan.style.transform = 'scale(1)';
+                        counterSpan.style.color = '#8d5a2d';
+                    }, 500);
+                }
+            });
+            
+            // 添加触觉反馈（在支持振动的设备上）
+            countBtn.addEventListener('touchstart', function() {
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            });
+            
+            // 添加键盘支持
+            document.addEventListener('keydown', function(e) {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    countBtn.click();
+                } else if (e.key === 'r' || e.key === 'R') {
+                    resetBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
